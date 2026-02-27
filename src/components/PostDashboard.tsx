@@ -57,18 +57,13 @@ const PostDashboard = () => {
     (_, i) => `February ${String(i + 1).padStart(2, "0")}`,
   );
 
+  const preUpdatedPost = JSON.parse(
+    localStorage.getItem("updated_post") as string,
+  );
   // Local State for Checkmarks: { "Date-Client-Platform": true/false }
-  const [gridState, setGridState] = useState<Record<string, boolean>>({
-    "February 02-Rang Rasiya-fb": true,
-    "February 02-Rang Rasiya-li": true,
-    "February 02-Rasoee Masale-ig": true,
-    "February 02-Riva-fb": true,
-    "February 03-Riva-fb": true,
-    "February 03-Riva-ig": true,
-    "February 06-Rang Rasiya-fb": true,
-    "February 06-Rang Rasiya-ig": true,
-    "February 08-Rasoee Masale-ig": true,
-  });
+  const [gridState, setGridState] = useState<Record<string, boolean>>(
+    preUpdatedPost ?? {},
+  );
 
   // Smooth Toggle Function
   const toggleCell = (date: string, client: string, platform: string) => {
@@ -81,6 +76,8 @@ const PostDashboard = () => {
 
   useEffect(() => {
     console.log(gridState);
+
+    localStorage.setItem("updated_post", JSON.stringify(gridState));
   }, [gridState]);
 
   return (
@@ -215,7 +212,7 @@ const PostDashboard = () => {
                         <React.Fragment key={`${date}-${client}`}>
                           {platforms.map((p) => {
                             const isChecked =
-                              gridState[`${date}-${client}-${p.id}`] ?? false;
+                              gridState[`${date}-${client}-${p.id}`];
                             return (
                               <td
                                 key={`${date}-${client}-${p.id}`}
